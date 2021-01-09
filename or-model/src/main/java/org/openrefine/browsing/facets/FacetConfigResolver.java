@@ -40,7 +40,7 @@ public class FacetConfigResolver extends TypeIdResolverBase {
 	static final public Map<String, Class<? extends FacetConfig>> s_nameToClass =
 	        new HashMap<String, Class<? extends FacetConfig>>();
     
-    protected TypeFactory factory = TypeFactory.defaultInstance();
+	protected TypeFactory factory = TypeFactory.defaultInstance();
     
     public static void registerFacetConfig(String moduleName, String name, Class<? extends FacetConfig> klass) {
     	s_nameToClass.put(moduleName + "/" + name, klass);
@@ -69,7 +69,8 @@ public class FacetConfigResolver extends TypeIdResolverBase {
     	}
     	
     	if (s_nameToClass.containsKey(id)) {
-    		return factory.constructSimpleType(s_nameToClass.get(id), new JavaType[0]);
+    		Class<? extends FacetConfig> rawType = s_nameToClass.get(id);
+			return factory.constructSimpleType(rawType, rawType, new JavaType[0]);
     	} else {
     		throw new IllegalArgumentException("Unknown facet type: '"+id+"'");
     	}

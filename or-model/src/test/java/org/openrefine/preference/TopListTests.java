@@ -39,23 +39,43 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 
 public class TopListTests {
+	String json = "{"
+            + "\"class\":\"org.openrefine.preference.TopList\","
+            + "\"top\":100,"
+            + "\"list\":["
+            + "   \"grel:value.parseJson()[\\\"end-date\\\"][\\\"year\\\"][\\\"value\\\"]\","
+            + "   \"grel:value.parseJson()[\\\"start-date\\\"][\\\"year\\\"][\\\"value\\\"]\","
+            + "   \"grel:value.parseJson()[\\\"organization\\\"][\\\"disambiguated-organization\\\"][\\\"disambiguated-organization-identifier\\\"]\","
+            + "   \"grel:value.parseJson()[\\\"organization\\\"][\\\"address\\\"][\\\"country\\\"]\",\"grel:value.parseJson()[\\\"organization\\\"][\\\"name\\\"]\","
+            + "   \"grel:value.parseJson()[\\\"employment-summary\\\"].join('###')\","
+            + "   \"grel:\\\"https://pub.orcid.org/\\\"+value+\\\"/employments\\\"\""
+            + "]}";
+	
+	String oldJson = "{"
+            + "\"class\":\"com.google.refine.preference.TopList\","
+            + "\"top\":100,"
+            + "\"list\":["
+            + "   \"grel:value.parseJson()[\\\"end-date\\\"][\\\"year\\\"][\\\"value\\\"]\","
+            + "   \"grel:value.parseJson()[\\\"start-date\\\"][\\\"year\\\"][\\\"value\\\"]\","
+            + "   \"grel:value.parseJson()[\\\"organization\\\"][\\\"disambiguated-organization\\\"][\\\"disambiguated-organization-identifier\\\"]\","
+            + "   \"grel:value.parseJson()[\\\"organization\\\"][\\\"address\\\"][\\\"country\\\"]\",\"grel:value.parseJson()[\\\"organization\\\"][\\\"name\\\"]\","
+            + "   \"grel:value.parseJson()[\\\"employment-summary\\\"].join('###')\","
+            + "   \"grel:\\\"https://pub.orcid.org/\\\"+value+\\\"/employments\\\"\""
+            + "]}";
+	
     @Test
     public void serializeTopList() throws JsonParseException, JsonMappingException, IOException {
-        String json = "{"
-                + "\"class\":\"org.openrefine.preference.TopList\","
-                + "\"top\":100,"
-                + "\"list\":["
-                + "   \"grel:value.parseJson()[\\\"end-date\\\"][\\\"year\\\"][\\\"value\\\"]\","
-                + "   \"grel:value.parseJson()[\\\"start-date\\\"][\\\"year\\\"][\\\"value\\\"]\","
-                + "   \"grel:value.parseJson()[\\\"organization\\\"][\\\"disambiguated-organization\\\"][\\\"disambiguated-organization-identifier\\\"]\","
-                + "   \"grel:value.parseJson()[\\\"organization\\\"][\\\"address\\\"][\\\"country\\\"]\",\"grel:value.parseJson()[\\\"organization\\\"][\\\"name\\\"]\","
-                + "   \"grel:value.parseJson()[\\\"employment-summary\\\"].join('###')\","
-                + "   \"grel:\\\"https://pub.orcid.org/\\\"+value+\\\"/employments\\\"\""
-                + "]}";
+        
         PreferenceValue prefValue = ParsingUtilities.mapper.readValue(json, PreferenceValue.class);
         TestUtils.isSerializedTo(prefValue, json, ParsingUtilities.defaultWriter);
         
         String mapJson = "{\"key\":"+json+"}";
         TestUtils.isSerializedTo(Collections.singletonMap("key",prefValue), mapJson, ParsingUtilities.defaultWriter);
+    }
+    
+    @Test
+    public void deserializeOldTopList() throws JsonParseException, JsonMappingException, IOException {
+        PreferenceValue prefValue = ParsingUtilities.mapper.readValue(oldJson, PreferenceValue.class);
+        TestUtils.isSerializedTo(prefValue, json, ParsingUtilities.defaultWriter);
     }
 }

@@ -27,6 +27,10 @@
 package org.openrefine.preference;
 
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.fasterxml.jackson.databind.annotation.JsonTypeIdResolver;
+
+import org.openrefine.browsing.facets.FacetConfigResolver;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
@@ -39,9 +43,10 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  */
 
 @JsonTypeInfo(
-        use=JsonTypeInfo.Id.CLASS,
+        use=JsonTypeInfo.Id.NAME,
         include=JsonTypeInfo.As.EXISTING_PROPERTY,
         property="class")
+@JsonTypeIdResolver(PreferenceValueResolver.class)
 public interface PreferenceValue {
 	
 	@JsonProperty("class")
